@@ -3,13 +3,14 @@ const productRouter = express.Router();
 const { ProductModel } = require("../models/product.model");
 const { CartModel } = require("../models/cart.model");
 const {OrderModel}= require("../models/order.model")
+const { authenticate } = require("../middlewares/authenticate.middleware");
 
 productRouter.get("/getProducts", async (req, res) => {
   const products = await ProductModel.find();
   res.send(products);
 });
 
-productRouter.post("/addToCart", async (req, res) => {
+productRouter.post("/addToCart", authenticate, async (req, res) => {
   try {
     const { productID, userID } = req.body;
     if (!productID || !userID) {
@@ -34,7 +35,7 @@ productRouter.post("/addToCart", async (req, res) => {
   }
 });
 
-productRouter.delete("/removeFromCart", async (req, res) => {
+productRouter.delete("/removeFromCart", authenticate,async (req, res) => {
   const { productID, userID } = req.body;
 
   if (!productID || !userID) {
@@ -50,7 +51,7 @@ productRouter.delete("/removeFromCart", async (req, res) => {
   res.status(200).json({ message: "Product removed from cart successfully!" });
 });
 
-productRouter.put("/increase-quantity", async (req, res) => {
+productRouter.put("/increase-quantity", authenticate,async (req, res) => {
   try {
     const { productID, userID } = req.body;
 
@@ -75,7 +76,7 @@ productRouter.put("/increase-quantity", async (req, res) => {
   }
 });
 
-productRouter.put("/decrease-quantity", async (req, res) => {
+productRouter.put("/decrease-quantity", authenticate,async (req, res) => {
   try {
     const { productID, userID } = req.body;
 
@@ -107,7 +108,7 @@ productRouter.put("/decrease-quantity", async (req, res) => {
   }
 });
 
-productRouter.get("/total-price", async (req, res) => {
+productRouter.get("/total-price",authenticate, async (req, res) => {
   try {
     const { userID } = req.body;
     const cart = await CartModel.aggregate([
@@ -139,33 +140,9 @@ productRouter.get("/total-price", async (req, res) => {
   }
 });
 
-productRouter.post("/place-order", async (req, res) => {
+productRouter.post("/place-order",authenticate, async (req, res) => {
     try {
       const { userID ,shippingAddress} = req.body;
-    //   const cart = await CartModel.aggregate([
-    //     { $match: { userID } },
-    //     {
-    //       $lookup: {
-    //         from: "products",
-    //         localField: "productID",
-    //         foreignField: "productID",
-    //         as: "productDetails",
-    //       },
-    //     },
-        // { $unwind: "$productDetails" },
-        // {
-        //   $group: {
-        //     _id: null,
-        //     totalPrice: {
-        //       $sum: {
-        //         $multiply: ["$quantity", "$productDetails.price"],
-        //       },
-        //     },
-        //   },
-        // },
-        // { $project: { _id: 0, totalPrice: 1 } },
-    //   ]);
-
     if (!shippingAddress) {
         return res.status(400).json({ message: "Shipping address is required." });
       }
