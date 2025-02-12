@@ -8,7 +8,7 @@ const { productRouter } = require("./routes/product.routes");
 const { authenticate } = require("./middlewares/authenticate.middleware");
 
 app.get("/", (req, res) => {
-  res.send("keerti");
+  res.send("Home Page");
 });
 app.use("/user", userRouter);
 app.use(authenticate);
