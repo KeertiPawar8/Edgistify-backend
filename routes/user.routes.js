@@ -10,6 +10,11 @@ userRouter.post("/register", async (req, res) => {
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ message: "password length should be minimum 8 characters" });
+    }
     const checkuser = await UserModel.find({ email });
 
     if (checkuser.length > 0) {
@@ -35,15 +40,11 @@ userRouter.post("/register", async (req, res) => {
     return res.status(400).json({ message: "Invalid request", error });
   }
 });
-// {
-//     "fullName":"new",
-//     "email":"new@gmail.com",
-//     "password":"new"
-//   }
+
 
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
+  
   const user = await UserModel.find({ email });
 
   if (user.length == 0) {
