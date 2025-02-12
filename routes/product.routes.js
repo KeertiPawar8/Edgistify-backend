@@ -35,6 +35,16 @@ productRouter.post("/addToCart", authenticate, async (req, res) => {
   }
 });
 
+productRouter.get("/getCartProducts", authenticate, async (req, res) => {
+  try {
+    const { userID } = req.body;
+    const cartData = await CartModel.find({userID});
+    return res.status(200).json({cartData});
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 productRouter.delete("/removeFromCart", authenticate,async (req, res) => {
   const { productID, userID } = req.body;
 
