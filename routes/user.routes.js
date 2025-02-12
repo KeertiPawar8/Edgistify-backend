@@ -12,7 +12,7 @@ userRouter.post("/register", async (req, res) => {
     }
     if (password.length < 8) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "password length should be minimum 8 characters" });
     }
     const checkuser = await UserModel.find({ email });
