@@ -52,14 +52,14 @@ userRouter.post("/login", async (req, res) => {
   if (user.length == 0) {
     return res
       .status(404)
-      .json({ message: "user does not exist, please register" });
+      .json({ message: "user does not exist, please register", hasError:true });
   } else {
     bcrypt.compare(password, user[0].password, (err, result) => {
       if (result) {
         const token = jwt.sign({ userId: user[0]._id }, process.env.JWT_SECRET);
-        return res.status(200).json({ token });
+        return res.status(200).json({ token ,hasError:false});
       } else {
-        return res.status(401).send({ message: "Wrong credentials" });
+        return res.status(401).send({ message: "Wrong credentials" ,hasError:true});
       }
     });
   }
