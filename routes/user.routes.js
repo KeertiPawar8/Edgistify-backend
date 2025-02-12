@@ -13,7 +13,10 @@ userRouter.post("/register", async (req, res) => {
     if (password.length < 8) {
       return res
         .status(200)
-        .json({ message: "password length should be minimum 8 characters" });
+        .json({
+          message: "password length should be minimum 8 characters",
+          hasError: true,
+        });
     }
     const checkuser = await UserModel.find({ email });
 
@@ -41,10 +44,9 @@ userRouter.post("/register", async (req, res) => {
   }
 });
 
-
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  
+
   const user = await UserModel.find({ email });
 
   if (user.length == 0) {
