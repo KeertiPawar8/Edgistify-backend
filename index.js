@@ -2,6 +2,7 @@ const express = require("express");
 const { connection } = require("./db");
 const app = express();
 app.use(express.json());
+app.use(cors());
 require("dotenv").config();
 const { userRouter } = require("./routes/user.routes");
 const { productRouter } = require("./routes/product.routes");
