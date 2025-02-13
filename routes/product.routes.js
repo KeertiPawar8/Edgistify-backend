@@ -14,16 +14,16 @@ productRouter.post("/addToCart", authenticate, async (req, res) => {
   try {
     const { productID, userID } = req.body;
     if (!productID || !userID) {
-      return res.status(400).json({ message: "Invalid productID and userID" });
+      return res.status(200).json({ message: "Invalid productID and userID" });
     }
     const product = await ProductModel.findOne({ productID });
     if (product.status !== "available" || product.stock === 0) {
-      return res.status(400).json({ message: "Product is unavailable" });
+      return res.status(200).json({ message: "Product is unavailable" });
     }
     const cartItem = await CartModel.findOne({ productID, userID });
     if (cartItem) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Product already present in the Cart" });
     }
     const newCartItem = new CartModel({ productID, userID, quantity: 1 });
